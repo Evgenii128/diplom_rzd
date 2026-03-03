@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>РЖД-ТехСервис | Панель управления</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <div class="header-left">
+          <div class="logo">
+            <div class="logo-icon">🚂</div>
+            <div class="logo-text">
+              <h1>ООО "РЖД-ТехСервис"</h1>
+              <div class="subtitle">Панель управления | Заявки клиентов</div>
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="user-menu">
+            <div class="user-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-info">
+              <div class="user-name" id="adminUserName">Администратор</div>
+              <div class="user-role" id="adminUserRole">
+                Администратор системы
+              </div>
+            </div>
+          </div>
+          <button class="btn-icon" title="Сменить тему" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="btn-icon" onclick="logout()" title="Выйти">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+          <a href="/" class="btn-icon btn-logout" title="На сайт">
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+      </header>
+
+      <div class="main-layout">
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <h3><i class="fas fa-bars"></i> Навигация</h3>
+          </div>
+          <ul class="nav-menu">
+            <li class="nav-item active" data-section="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Дашборд</span>
+            </li>
+            <li class="nav-item" data-section="requests">
+              <i class="fas fa-file-signature"></i>
+              <span>Заявки</span>
+            </li>
+            <li class="nav-item" data-section="services">
+              <i class="fas fa-concierge-bell"></i>
+              <span>Услуги</span>
+            </li>
+            <li class="nav-item" data-section="clients">
+              <i class="fas fa-users"></i>
+              <span>Клиенты</span>
+            </li>
+            <li class="nav-item" data-section="price-lists">
+              <i class="fas fa-file-invoice-dollar"></i>
+              <span>Прайс-листы</span>
+            </li>
+            <li class="nav-item" data-section="contracts">
+              <i class="fas fa-file-contract"></i>
+              <span>Договоры</span>
+            </li>
+            <li class="nav-item" data-section="invoices">
+              <i class="fas fa-receipt"></i>
+              <span>Счета</span>
+            </li>
+          </ul>
+          <div class="sidebar-footer">
+            <div class="db-status">
+              <div class="status-indicator" id="dbStatusIndicator"></div>
+              <span id="dbStatusText">Проверка...</span>
+            </div>
+            <div class="server-time" id="serverTime">
+              <i class="fas fa-clock"></i>
+              <span>--:--:--</span>
+            </div>
+          </div>
+        </aside>
+
+        <main class="content-area">
+          <section class="content-section active" id="dashboard">
+            <div class="section-header">
+              <h2><i class="fas fa-tachometer-alt"></i> Панель управления</h2>
+              <button class="btn btn-success" onclick="loadDashboardData()">
+                <i class="fas fa-sync-alt"></i> Обновить
+              </button>
+            </div>
+
+            <div class="kpi-grid">
+              <div class="kpi-card revenue">
+                <div class="kpi-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="kpi-content">
+                  <div class="kpi-label">Выручка</div>
+                  <div class="kpi-value" id="statTotalRevenue">0 ₽</div>
+                  <div class="kpi-trend positive">
+                    <i class="fas fa-arrow-up"></i> +12.5%
+                  </div>
+                </div>
+              </div>
+
+              <div class="kpi-card contracts">
+                <div class="kpi-icon">
+                  <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="kpi-content">
+                  <div class="kpi-label">Активные договоры</div>
+                  <div class="kpi-value" id="statActiveContracts">0</div>
+                  <div class="kpi-trend neutral">
+                    <i class="fas fa-minus"></i> без изменений
+                  </div>
+                </div>
+              </div>
+
+              <div class="kpi-card invoices">
+                <div class="kpi-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="kpi-content">
+                  <div class="kpi-label">Ожидают оплаты</div>
+                  <div class="kpi-value" id="statPendingInvoices">0</div>
+                  <div class="kpi-trend negative">
+                    <i class="fas fa-exclamation-triangle"></i> 3 просрочено
+                  </div>
+                </div>
+              </div>
+
+              <div class="kpi-card clients">
+                <div class="kpi-icon">
+                  <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="kpi-content">
+                  <div class="kpi-label">Клиенты</div>
+                  <div class="kpi-value" id="statClients">0</div>
+                  <div class="kpi-trend positive">
+                    <i class="fas fa-arrow-up"></i> +2 новых
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stats-row">
+              <div class="stats-card main">
+                <div class="stats-header">
+                  <h3><i class="fas fa-tasks"></i> Заявки</h3>
+                  <span class="stats-badge">Обновлено сейчас</span>
+                </div>
+                <div class="stats-main-simple">
+                  <div class="stats-list-full">
+                    <div class="stats-item">
+                      <span class="stats-item-label"
+                        ><span class="dot new"></span> Новые</span
+                      >
+                      <span class="stats-item-value" id="statNewRequests"
+                        >0</span
+                      >
+                    </div>
+                    <div class="stats-item">
+                      <span class="stats-item-label"
+                        ><span class="dot progress"></span> В работе</span
+                      >
+                      <span class="stats-item-value" id="statInProgressRequests"
+                        >0</span
+                      >
+                    </div>
+                    <div class="stats-item">
+                      <span class="stats-item-label"
+                        ><span class="dot completed"></span> Завершено</span
+                      >
+                      <span class="stats-item-value" id="statCompletedRequests"
+                        >0</span
+                      >
+                    </div>
+                    <div class="stats-item total">
+                      <span class="stats-item-label">Всего заявок</span>
+                      <span class="stats-item-value" id="statTotalRequests"
+                        >0</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stats-card">
+                <div class="stats-header">
+                  <h3><i class="fas fa-chart-pie"></i> Распределение</h3>
+                </div>
+                <div class="stats-pie-container">
+                  <div class="pie-legend-full">
+                    <div class="legend-item">
+                      <span class="color-dot services"></span>
+                      <span>Услуги</span>
+                      <span class="legend-value" id="statServices">0</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="color-dot contracts"></span>
+                      <span>Договоры</span>
+                      <span class="legend-value" id="statContractsCount"
+                        >0</span
+                      >
+                    </div>
+                    <div class="legend-item">
+                      <span class="color-dot invoices"></span>
+                      <span>Счета</span>
+                      <span class="legend-value" id="statInvoicesCount">0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              <div class="dashboard-card recent">
+                <div class="card-header">
+                  <h3><i class="fas fa-history"></i> Последние заявки</h3>
+                  <a
+                    href="#"
+                    onclick="
+                      document
+                        .querySelector('[data-section=&quot;requests&quot;]')
+                        .click();
+                      return false;
+                    "
+                    class="card-link"
+                    >Все заявки <i class="fas fa-arrow-right"></i
+                  ></a>
+                </div>
+                <div class="recent-list" id="recentRequests">
+                  <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i> Загрузка...
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-card quick-actions-modern">
+                <div class="card-header">
+                  <h3><i class="fas fa-bolt"></i> Быстрые действия</h3>
+                </div>
+                <div class="actions-modern-grid">
+                  <button
+                    class="action-modern"
+                    onclick="showModal('serviceModal')"
+                  >
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>Новая услуга</span>
+                  </button>
+                  <button
+                    class="action-modern"
+                    onclick="showModal('clientModal')"
+                  >
+                    <i class="fas fa-user-plus"></i>
+                    <span>Новый клиент</span>
+                  </button>
+                  <button
+                    class="action-modern"
+                    onclick="showModal('contractModal')"
+                  >
+                    <i class="fas fa-file-contract"></i>
+                    <span>Новый договор</span>
+                  </button>
+                  <button
+                    class="action-modern"
+                    onclick="showModal('invoiceModal')"
+                  >
+                    <i class="fas fa-receipt"></i>
+                    <span>Выставить счет</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="dashboard-card upcoming">
+                <div class="card-header">
+                  <h3><i class="fas fa-calendar-alt"></i> Скоро истекают</h3>
+                </div>
+                <div class="upcoming-list" id="upcomingDeadlines">
+                  <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i> Загрузка...
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-card activity">
+                <div class="card-header">
+                  <h3><i class="fas fa-chart-bar"></i> Активность</h3>
+                  <span class="badge">За 7 дней</span>
+                </div>
+                <div class="activity-chart">
+                  <div class="bar-chart">
+                    <div class="bar" style="height: 40px"><span>Пн</span></div>
+                    <div class="bar" style="height: 65px"><span>Вт</span></div>
+                    <div class="bar" style="height: 55px"><span>Ср</span></div>
+                    <div class="bar" style="height: 80px"><span>Чт</span></div>
+                    <div class="bar" style="height: 45px"><span>Пт</span></div>
+                    <div class="bar" style="height: 30px"><span>Сб</span></div>
+                    <div class="bar" style="height: 25px"><span>Вс</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="content-section" id="requests">
+            <div class="section-header">
+              <h2><i class="fas fa-file-signature"></i> Заявки от клиентов</h2>
+              <div class="header-actions">
+                <select
+                  class="filter-select"
+                  id="requestStatusFilter"
+                  onchange="loadRequests()"
+                >
+                  <option value="">Все статусы</option>
+                  <option value="new">Новые</option>
+                  <option value="in_progress">В работе</option>
+                  <option value="completed">Завершённые</option>
+                  <option value="cancelled">Отклонённые</option>
+                </select>
+                <button class="btn btn-success" onclick="loadRequests()">
+                  <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>№ заявки</th>
+                    <th>ФИО / Компания</th>
+                    <th>Контакты</th>
+                    <th>Услуги / Сумма</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="requestsTable">
+                  <tr>
+                    <td colspan="7" class="empty-state">Загрузка заявок...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-section" id="services">
+            <div class="section-header">
+              <h2><i class="fas fa-concierge-bell"></i> Услуги компании</h2>
+              <div class="header-actions">
+                <button class="btn btn-success" onclick="loadServices()">
+                  <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('serviceModal')"
+                >
+                  <i class="fas fa-plus"></i> Добавить услугу
+                </button>
+              </div>
+            </div>
+            <div class="table-actions">
+              <div class="filter-group">
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    id="serviceSearch"
+                    placeholder="Поиск услуг..."
+                    onkeyup="searchServices()"
+                  />
+                </div>
+                <div class="filter-label">
+                  <input
+                    type="checkbox"
+                    id="showActiveOnly"
+                    onchange="filterServices()"
+                  />
+                  <span>Только активные</span>
+                </div>
+              </div>
+              <div class="table-info">
+                <span id="servicesCount">0 услуг</span>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Код услуги</th>
+                    <th>Название</th>
+                    <th>Ед. изм.</th>
+                    <th>Базовая цена</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="servicesTable">
+                  <tr>
+                    <td colspan="6" class="empty-state">Загрузка услуг...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-section" id="clients">
+            <div class="section-header">
+              <h2><i class="fas fa-users"></i> Клиенты</h2>
+              <div class="header-actions">
+                <button class="btn btn-success" onclick="loadClients()">
+                  <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('clientModal')"
+                >
+                  <i class="fas fa-plus"></i> Добавить клиента
+                </button>
+              </div>
+            </div>
+            <div class="table-actions">
+              <div class="filter-group">
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    id="clientSearch"
+                    placeholder="Поиск клиентов..."
+                    onkeyup="searchClients()"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Компания</th>
+                    <th>Контактное лицо</th>
+                    <th>ИНН</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="clientsTable">
+                  <tr>
+                    <td colspan="6" class="empty-state">
+                      Загрузка клиентов...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-section" id="price-lists">
+            <div class="section-header">
+              <h2><i class="fas fa-file-invoice-dollar"></i> Прайс-листы</h2>
+              <div class="header-actions">
+                <button class="btn btn-success" onclick="loadPriceLists()">
+                  <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('priceListModal')"
+                >
+                  <i class="fas fa-plus"></i> Создать прайс-лист
+                </button>
+              </div>
+            </div>
+            <div id="priceListsContainer"></div>
+          </section>
+
+          <section class="content-section" id="contracts">
+            <div class="section-header">
+              <h2><i class="fas fa-file-contract"></i> Договоры</h2>
+              <div class="header-actions">
+                <button class="btn btn-success" onclick="loadContracts()">
+                  <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('contractModal')"
+                >
+                  <i class="fas fa-plus"></i> Добавить договор
+                </button>
+              </div>
+            </div>
+            <div class="table-actions">
+              <div class="filter-group">
+                <select
+                  class="filter-select"
+                  id="contractStatusFilter"
+                  onchange="loadContracts()"
+                >
+                  <option value="">Все статусы</option>
+                  <option value="active">Активные</option>
+                  <option value="suspended">Приостановленные</option>
+                  <option value="terminated">Завершенные</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Номер договора</th>
+                    <th>Клиент</th>
+                    <th>Дата</th>
+                    <th>Срок действия</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="contractsTable">
+                  <tr>
+                    <td colspan="7" class="empty-state">
+                      Загрузка договоров...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="content-section" id="invoices">
+            <div class="section-header">
+              <h2><i class="fas fa-receipt"></i> Счета</h2>
+              <div class="header-actions">
+                <button
+                  class="btn btn-primary"
+                  onclick="showModal('invoiceModal')"
+                >
+                  <i class="fas fa-plus"></i> Выставить счет
+                </button>
+                <button class="btn btn-success" onclick="loadInvoices()">
+                  <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+              </div>
+            </div>
+            <div class="table-actions">
+              <div class="filter-group">
+                <select
+                  class="filter-select"
+                  id="invoiceStatusFilter"
+                  onchange="loadInvoices()"
+                >
+                  <option value="">Все статусы</option>
+                  <option value="pending">Ожидают оплаты</option>
+                  <option value="paid">Оплаченные</option>
+                  <option value="cancelled">Отмененные</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>№ счета</th>
+                    <th>Клиент / Договор</th>
+                    <th>Дата выставления</th>
+                    <th>Срок оплаты</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="invoicesTable">
+                  <tr>
+                    <td colspan="7" class="empty-state">Загрузка счетов...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer class="app-footer">
+        <div class="footer-content">
+          <div>ООО "РЖД-ТехСервис" | Система подачи заявлений</div>
+          <div class="tech-stack">
+            <span class="badge">MySQL</span>
+            <span class="badge">Node.js</span>
+            <span class="badge">Express</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <div class="modal-overlay" id="serviceModal">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3 id="modalServiceTitle">
+            <i class="fas fa-concierge-bell"></i> Добавить новую услугу
+          </h3>
+          <button class="btn-close" onclick="closeModal('serviceModal')">
+            &times;
+          </button>
+        </div>
+        <form id="serviceForm" onsubmit="saveService(event)">
+          <input type="hidden" id="serviceId" value="" />
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Код услуги *</label>
+                <input
+                  type="text"
+                  id="serviceCode"
+                  required
+                  placeholder="SERV-001"
+                />
+              </div>
+              <div class="form-group">
+                <label>Название услуги *</label>
+                <input
+                  type="text"
+                  id="serviceName"
+                  required
+                  placeholder="Техническое обслуживание"
+                />
+              </div>
+              <div class="form-group">
+                <label>Единица измерения *</label>
+                <select id="serviceUnit" required>
+                  <option value="">Выберите</option>
+                  <option value="час">час</option>
+                  <option value="шт">шт</option>
+                  <option value="м">м</option>
+                  <option value="услуга">услуга</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Базовая цена (₽) *</label>
+                <input
+                  type="number"
+                  id="servicePrice"
+                  required
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Описание</label>
+              <textarea id="serviceDescription" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="serviceActive" checked />
+                <span>Услуга активна</span>
+              </label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('serviceModal')"
+            >
+              Отмена
+            </button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="clientModal">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3 id="modalClientTitle">
+            <i class="fas fa-user-plus"></i> Добавить нового клиента
+          </h3>
+          <button class="btn-close" onclick="closeModal('clientModal')">
+            &times;
+          </button>
+        </div>
+        <form id="clientForm" onsubmit="saveClient(event)">
+          <input type="hidden" id="clientId" value="" />
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Название компании *</label>
+                <input type="text" id="clientCompany" required />
+              </div>
+              <div class="form-group">
+                <label>Контактное лицо</label>
+                <input type="text" id="clientContact" />
+              </div>
+              <div class="form-group">
+                <label>ИНН</label>
+                <input type="text" id="clientINN" />
+              </div>
+              <div class="form-group">
+                <label>Телефон</label>
+                <input type="tel" id="clientPhone" />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="clientEmail" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Юридический адрес</label>
+              <textarea id="clientAddress" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Банковские реквизиты</label>
+              <textarea id="clientBank" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('clientModal')"
+            >
+              Отмена
+            </button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="priceListModal">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3 id="modalPriceListTitle">
+            <i class="fas fa-file-invoice-dollar"></i> Создать прайс-лист
+          </h3>
+          <button class="btn-close" onclick="closeModal('priceListModal')">
+            &times;
+          </button>
+        </div>
+        <form id="priceListForm" onsubmit="savePriceList(event)">
+          <input type="hidden" id="priceListId" value="" />
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Название *</label>
+                <input type="text" id="priceListName" required />
+              </div>
+              <div class="form-group">
+                <label>Действует с *</label>
+                <input type="date" id="priceListValidFrom" required />
+              </div>
+              <div class="form-group">
+                <label>Действует до</label>
+                <input type="date" id="priceListValidTo" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Описание</label>
+              <textarea id="priceListDescription" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="priceListActive" checked />
+                <span>Активен</span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Позиции прайс-листа:</label>
+              <div id="priceListItems"></div>
+              <button
+                type="button"
+                class="btn btn-sm btn-secondary"
+                onclick="addPriceListItem()"
+              >
+                <i class="fas fa-plus"></i> Добавить позицию
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('priceListModal')"
+            >
+              Отмена
+            </button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="contractModal">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3 id="modalContractTitle">
+            <i class="fas fa-file-contract"></i> Добавить договор
+          </h3>
+          <button class="btn-close" onclick="closeModal('contractModal')">
+            &times;
+          </button>
+        </div>
+        <form id="contractForm" onsubmit="saveContract(event)">
+          <input type="hidden" id="contractId" value="" />
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Номер договора *</label>
+                <input type="text" id="contractNumber" required />
+              </div>
+              <div class="form-group">
+                <label>Клиент *</label>
+                <select id="contractClient" required>
+                  <option value="">Выберите клиента</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Прайс-лист</label>
+                <select id="contractPriceList">
+                  <option value="">Без прайс-листа</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Статус</label>
+                <select id="contractStatus">
+                  <option value="active">Активен</option>
+                  <option value="suspended">Приостановлен</option>
+                  <option value="terminated">Завершен</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Дата договора *</label>
+                <input type="date" id="contractDate" required />
+              </div>
+              <div class="form-group">
+                <label>Дата начала *</label>
+                <input type="date" id="contractStartDate" required />
+              </div>
+              <div class="form-group">
+                <label>Дата окончания</label>
+                <input type="date" id="contractEndDate" />
+              </div>
+              <div class="form-group">
+                <label>Сумма (₽)</label>
+                <input
+                  type="number"
+                  id="contractAmount"
+                  step="0.01"
+                  min="0"
+                  value="0"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('contractModal')"
+            >
+              Отмена
+            </button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="invoiceModal">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3><i class="fas fa-receipt"></i> Выставить счет</h3>
+          <button class="btn-close" onclick="closeModal('invoiceModal')">
+            &times;
+          </button>
+        </div>
+        <form id="invoiceForm" onsubmit="saveInvoice(event)">
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Номер счета *</label>
+                <input
+                  type="text"
+                  id="invoiceNumber"
+                  required
+                  placeholder="INV-2024-001"
+                />
+              </div>
+              <div class="form-group">
+                <label>Договор *</label>
+                <select id="invoiceContract" required>
+                  <option value="">Выберите договор</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Дата выставления *</label>
+                <input type="date" id="invoiceDate" required />
+              </div>
+              <div class="form-group">
+                <label>Срок оплаты *</label>
+                <input type="date" id="invoiceDueDate" required />
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Сумма (₽) *</label>
+                <input
+                  type="number"
+                  id="invoiceAmount"
+                  required
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+              <div class="form-group">
+                <label>Статус</label>
+                <select id="invoiceStatus">
+                  <option value="pending">Ожидает оплаты</option>
+                  <option value="paid">Оплачен</option>
+                  <option value="cancelled">Отменен</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Примечание</label>
+              <textarea id="invoiceNotes" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('invoiceModal')"
+            >
+              Отмена
+            </button>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="requestStatusModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3><i class="fas fa-edit"></i> Изменить статус заявки</h3>
+          <button class="btn-close" onclick="closeModal('requestStatusModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="currentRequestId" />
+          <div class="form-group">
+            <label>Статус</label>
+            <select id="requestStatusSelect" class="filter-select">
+              <option value="new">Новая</option>
+              <option value="in_progress">В работе</option>
+              <option value="completed">Завершена</option>
+              <option value="cancelled">Отклонена</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Комментарий</label>
+            <textarea id="requestAdminNotes" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <button
+              type="button"
+              class="btn btn-success"
+              onclick="createContractFromRequest()"
+              style="width: 100%"
+            >
+              <i class="fas fa-file-contract"></i> Создать договор из заявки
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('requestStatusModal')"
+          >
+            Отмена
+          </button>
+          <button class="btn btn-success" onclick="updateRequestStatus()">
+            Сохранить статус
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>
+            <i class="fas fa-exclamation-triangle"></i> Подтверждение удаления
+          </h3>
+          <button class="btn-close" onclick="closeModal('deleteModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="deleteModalText">
+            Вы уверены, что хотите удалить этот элемент?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="closeModal('deleteModal')"
+          >
+            Отмена
+          </button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+            Удалить
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/admin.js"></script>
+
+  </body>
+</html>
